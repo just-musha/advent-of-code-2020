@@ -58,16 +58,23 @@ func main() {
 
 	fmt.Println("val = ", val)
 
-	// find sequence, which sum is equal to val
+	// find sequence of elements arr[start:end], which sum is equal to val
+	start := -1
+	end := -1
+
 	for i := 0; i < len(arr); i++ {
-		j := i
 		seqSum := 0
-		seq := make([]int, 0)
+		start = i
+		end = i + 1
+
+		j := i
 		for seqSum < val {
-			seq = append(seq, arr[j])
 			seqSum += arr[j]
+			end = j + 1
 			j++
 		}
+
+		seq := arr[start:end]
 
 		if seqSum == val && len(seq) >= 2 {
 			fmt.Println("found sequence: ", seq)
