@@ -24,41 +24,38 @@ func parseInput(data string) []int {
 	return jolts
 }
 
-var jolts []int
-var count *int
-
-func canConnectFrom(start int) int {
-	if start == len(jolts)-1 {
-		// base case: last element
-		return 1
+func countPaths(paths map[int]int, jolts []int) int {
+	for ci, cur := range jolts {
+		for i := 0; i < ci; i++ {
+			if jolts[ci]-jolts[i] <= 3 && jolts[ci]-jolts[i] >= 1 {
+				prev := jolts[i]
+				if val, ok := paths[prev]; ok {
+					paths[cur] += val
+				}
+			}
+		}
 	}
-	// not last element
-	next := start + 1
-	res := 0
-	for next <= len(jolts)-1 && jolts[next]-jolts[start] <= 3 {
-		res += canConnectFrom(next)
-		next++
-	}
-	return res
+	last := jolts[len(jolts)-1]
+	return paths[last]
 }
 
 func main() {
-
-	joltsArr := parseInput(test2)
+	joltsArr := parseInput(data)
 	sort.Ints(joltsArr)
 
-	// add fake start element (value = 0)
-	jolts = make([]int, 1)
+	// add fake start and end elements
+	jolts := make([]int, 1)
 	jolts[0] = 0
 	jolts = append(jolts, joltsArr...)
 
-	fmt.Println("jolts = ", jolts)
-	fmt.Println("len(jolts) = ", len(jolts))
+	fmt.Println(jolts)
 
-	res := canConnectFrom(0)
+	paths := make(map[int]int)
+	paths[0] = 1
+
+	res := countPaths(paths, jolts)
 
 	fmt.Println("count = ", res)
-
 }
 
 var test1 = `16
